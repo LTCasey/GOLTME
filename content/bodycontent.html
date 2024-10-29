@@ -1,0 +1,133 @@
+<div class="container">
+    <h1>Welcome to My Landing Page</h1>
+    <p>My name is Casey from Gaming on LakeTime. I am building a truth centered, family friendly, God focused community
+        that plays the critical role of disrupting corrupted entertainment sectors of society. AKA I want good where all
+        the bad has flourished. I grew up in a time, even though it quickly faded, where we still held the door open for
+        women, we still respected our elders and parents, we condemned degeneracy, and banished evil. We no longer live
+        in those times. We need good men back in places of influence.</p>
+
+    <div class="video-frame-container" id="video-frame-container">
+    </div>
+
+    <div id="json-data-container">
+        <h2>Livestream and Subscriber Data</h2>
+        <pre id="json-data"></pre>
+    </div>
+</div>
+
+<style>
+    /* Main container styling */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Heading and paragraph styling */
+    h1 {
+        font-size: 2.5em;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: 1.2em;
+        color: #666;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    /* Button styling */
+    .button {
+        display: inline-block;
+        background-color: #007bff;
+        color: white;
+        padding: 12px 25px;
+        font-size: 1em;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Video frame styling */
+    .video-frame-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+    .video-frame {
+        border: 2px solid #000;
+        padding: 10px;
+        width: 640px;
+        height: 360px;
+        box-sizing: border-box;
+    }
+
+    #rumble_v5i95ot {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* JSON data styling */
+    #json-data-container {
+        display: none;
+        margin-top: 30px;
+        text-align: left;
+    }
+
+    #json-data {
+        display: none;
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 5px;
+        overflow: auto;
+        max-height: 400px;
+    }
+</style>
+
+<script>
+    // Fetch JSON data from /rumble endpoint and display it
+    fetch('/rumble')
+        .then(response => response.json())
+        .then(data => {
+            const jsonDataContainer = document.getElementById('json-data');
+            jsonDataContainer.textContent = JSON.stringify(data, null, 2);
+
+            const videoFrameContainer = document.getElementById('video-frame-container');
+
+            // Check if livestream is live and inject video embed or link
+            if (data.livestreams && data.livestreams.length > 0) {
+                const livestream = data.livestreams.find(stream => stream.IsLive);
+                if (livestream) {
+                    const livestreamID = livestream.ID;
+                    const videoEmbedHtml = `
+              <div class="video-frame" id="rumble_${livestreamID}"></div>`;
+                    videoFrameContainer.innerHTML = videoEmbedHtml;
+
+                    const scriptElement = document.createElement('script');
+                    scriptElement.innerHTML = `
+              !function(r,u,m,b,l,e){r._Rumble=b,r[b]||(r[b]=function(){(r[b]._=r[b]._||[]).push(arguments);if(r[b]._.length==1){l=u.createElement(m),e=u.getElementsByTagName(m)[0],l.async=1,l.src="https://rumble.com/embedJS/${livestreamID}";e.parentNode.insertBefore(l,e)}})}(window, document, "script", "Rumble");
+              Rumble("play", {"video":"${livestreamID}","div":"rumble_${livestreamID}"});
+            `;
+                    videoFrameContainer.appendChild(scriptElement);
+                } else {
+                    const linkHtml = `<p>The livestream is currently not live. Please check out our <a href="https://rumble.com/GOLT/live" target="_blank">Rumble live page</a>.</p>`;
+                    videoFrameContainer.innerHTML = linkHtml;
+                }
+            } else {
+                const linkHtml = `<p>The livestream is currently not live. Please check out our <a href="https://rumble.com/GOLT/live" target="_blank">Rumble live page</a>.</p>`;
+                videoFrameContainer.innerHTML = linkHtml;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching JSON data:', error);
+        });
+</script>
