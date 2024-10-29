@@ -130,11 +130,23 @@
             `;
                     videoFrameContainer.appendChild(scriptElement);
                 } else {
-                    const linkHtml = `<p>The livestream is currently not live. Please check out our <a href="https://rumble.com/GOLT/live" target="_blank">Rumble live page</a>.</p>`;
+                    const linkHtml = `<p>
+    The livestream is currently not live. Please check out our 
+    <a href="https://rumble.com/GOLT/live" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-align: center; text-decoration: none; border-radius: 5px;">
+        Rumble live page
+    </a>.
+</p>
+`;
                     videoFrameContainer.innerHTML = linkHtml;
                 }
             } else {
-                const linkHtml = `<p>The livestream is currently not live. Please check out our <a href="https://rumble.com/GOLT/live" target="_blank">Rumble live page</a>.</p>`;
+                const linkHtml = `<p>
+    The livestream is currently not live. Please check out our 
+    <a href="https://rumble.com/GOLT/live" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-align: center; text-decoration: none; border-radius: 5px;">
+        Rumble live page
+    </a>.
+</p>
+`;
                 videoFrameContainer.innerHTML = linkHtml;
             }
         })
